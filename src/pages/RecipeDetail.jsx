@@ -114,50 +114,50 @@ export function RecipeDetail() {
     <div className="font-body-md text-on-surface bg-[#FDFDFD] min-h-screen transition-colors duration-300">
       <Header />
 
-      <main className="pt-24 pb-20 px-4 md:px-12 max-w-[1500px] mx-auto">
+      <main className="pt-20 md:pt-24 pb-20 px-4 md:px-12 max-w-[1500px] mx-auto">
         {/* Refined Hero Section */}
-        <div className="relative w-full rounded-[48px] overflow-hidden mb-12 min-h-[500px] lg:min-h-[600px] shadow-2xl group">
+        <div className="relative w-full rounded-[32px] md:rounded-[48px] overflow-hidden mb-8 md:mb-12 min-h-[400px] md:min-h-[500px] lg:min-h-[600px] shadow-2xl group">
           <img className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-105" src={recipe.image} alt={recipe.title} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
           
-          <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="absolute bottom-0 left-0 w-full p-6 md:p-16 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <div className="max-w-3xl">
-              <div className="flex gap-2 mb-6">
+              <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
                 {recipe.tags?.map((tag, i) => (
-                  <span key={i} className="px-4 py-1.5 rounded-full bg-primary/20 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest border border-white/10">
+                  <span key={i} className="px-3 md:px-4 py-1 md:py-1.5 rounded-full bg-primary/20 backdrop-blur-md text-white text-[8px] md:text-[10px] font-black uppercase tracking-widest border border-white/10">
                     {tag}
                   </span>
                 ))}
               </div>
-              <h1 className="text-5xl md:text-7xl font-brand text-white mb-6 leading-[0.9] tracking-tighter uppercase">
+              <h1 className="text-3xl md:text-5xl lg:text-7xl font-brand text-white mb-4 md:mb-6 leading-[1.1] md:leading-[0.9] tracking-tighter uppercase">
                 {recipe.title}
               </h1>
               
-              <div className="flex flex-wrap items-center gap-8 text-white/80">
+              <div className="flex flex-wrap items-center gap-4 md:gap-8 text-white/80">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary">timer</span>
-                  <span className="font-bold">{recipe.time} <small className="text-[10px] opacity-60">MIN</small></span>
+                  <span className="material-symbols-outlined text-primary text-sm md:text-base">timer</span>
+                  <span className="font-bold text-sm md:text-base">{recipe.time} <small className="text-[9px] md:text-[10px] opacity-60">MIN</small></span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary">local_fire_department</span>
-                  <span className="font-bold">{recipe.calories} <small className="text-[10px] opacity-60">KCAL</small></span>
+                  <span className="material-symbols-outlined text-primary text-sm md:text-base">local_fire_department</span>
+                  <span className="font-bold text-sm md:text-base">{recipe.calories} <small className="text-[9px] md:text-[10px] opacity-60">KCAL</small></span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                  <span className="font-bold">{recipe.rating}</span>
+                  <span className="material-symbols-outlined text-yellow-400 text-sm md:text-base" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  <span className="font-bold text-sm md:text-base">{recipe.rating}</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-4">
-               <button onClick={speakRecipe} className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${isSpeaking ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-white/10 text-white border border-white/20 hover:bg-white/20'}`}>
-                  <span className="material-symbols-outlined">{isSpeaking ? 'stop_circle' : 'volume_up'}</span>
+            <div className="flex flex-wrap gap-3 md:gap-4">
+               <button onClick={speakRecipe} className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center transition-all ${isSpeaking ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-white/10 text-white border border-white/20 hover:bg-white/20'}`}>
+                  <span className="material-symbols-outlined text-xl md:text-2xl">{isSpeaking ? 'stop_circle' : 'volume_up'}</span>
                </button>
-               <button onClick={toggleSave} className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${isSaved ? 'bg-red-500 text-white shadow-lg shadow-red-500/30' : 'bg-white/10 text-white border border-white/20 hover:bg-white/20'}`}>
-                  <span className="material-symbols-outlined" style={{ fontVariationSettings: isSaved ? "'FILL' 1" : "" }}>favorite</span>
+               <button onClick={toggleSave} className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center transition-all ${isSaved ? 'bg-red-500 text-white shadow-lg shadow-red-500/30' : 'bg-white/10 text-white border border-white/20 hover:bg-white/20'}`}>
+                  <span className="material-symbols-outlined text-xl md:text-2xl" style={{ fontVariationSettings: isSaved ? "'FILL' 1" : "" }}>favorite</span>
                </button>
-               <button className="bg-primary text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center gap-3">
-                  <span className="material-symbols-outlined">play_circle</span>
+               <button className="flex-grow md:flex-grow-0 bg-primary text-white px-6 md:px-10 py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 md:gap-3">
+                  <span className="material-symbols-outlined text-xl">play_circle</span>
                   Start Cooking
                </button>
             </div>
@@ -233,12 +233,12 @@ export function RecipeDetail() {
           </div>
 
           {/* Content: Instructions & Culture */}
-          <div className="lg:col-span-8 space-y-12">
+          <div className="lg:col-span-8 space-y-8 md:space-y-12">
             
             {/* Steps Section */}
-            <section className="bg-white p-10 rounded-[48px] shadow-sm border border-stone-300">
-               <h3 className="text-3xl font-black mb-12">Instructions</h3>
-               <div className="space-y-10">
+            <section className="bg-white p-8 md:p-10 rounded-[32px] md:rounded-[48px] shadow-sm border border-stone-200">
+               <h3 className="text-2xl md:text-3xl font-black mb-8 md:mb-12">Instructions</h3>
+               <div className="space-y-8 md:space-y-10">
                   {recipe.instructions.map((step, idx) => (
                     <div key={idx} className="flex gap-8 group">
                        <div className="flex flex-col items-center">

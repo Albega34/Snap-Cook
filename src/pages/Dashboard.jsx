@@ -87,6 +87,7 @@ export function Dashboard() {
     })
       .then(res => res.json())
       .then(data => {
+        console.log("=== Dashboard: Received AI Recommendations ===", data);
         setRecommendations(data);
         setRecsLoading(false);
       })
@@ -205,20 +206,20 @@ export function Dashboard() {
 
       <main className="mt-16 flex-grow w-full px-6 md:px-12 py-6">
         {/* Hero Section */}
-        <section className="mb-12 relative rounded-[40px] overflow-hidden bg-primary min-h-[380px] flex items-center p-8 lg:p-16 shadow-xl">
+        <section className="mb-12 relative rounded-[32px] md:rounded-[40px] overflow-hidden bg-primary min-h-[300px] md:min-h-[380px] flex items-center p-6 md:p-16 shadow-xl">
           <div className="absolute inset-0 z-0">
             <img alt="Food background" className="w-full h-full object-cover" src="/foods/hero.png" />
-            <div className="absolute inset-0 bg-gradient-to-r from-stone-900 via-stone-900/80 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-stone-900 via-stone-900/80 md:via-stone-900/60 to-transparent"></div>
           </div>
           <div className="relative z-10 max-w-2xl">
-            <h1 className="font-brand text-5xl md:text-6xl text-white mb-4 uppercase tracking-tighter leading-none">What's Cooking Today?</h1>
-            <p className="font-body-lg text-blue-100 mb-10 leading-relaxed max-w-lg">Snap a photo of your ingredients and let AI reveal the magic within.</p>
-            <div className="flex flex-wrap gap-5">
-              <button className="bg-white text-primary px-10 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-blue-50 transition-all active:scale-95 shadow-xl">
+            <h1 className="font-brand text-4xl md:text-6xl text-white mb-4 uppercase tracking-tighter leading-none">What's Cooking Today?</h1>
+            <p className="font-body-lg text-blue-100 mb-8 md:mb-10 leading-relaxed max-w-lg text-sm md:text-base">Snap a photo of your ingredients and let AI reveal the magic within.</p>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+              <button className="bg-white text-primary px-8 md:px-10 py-3 md:py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-50 transition-all active:scale-95 shadow-xl w-full sm:w-auto">
                 <span className="material-symbols-outlined">add_a_photo</span>
                 Open Camera
               </button>
-              <label className={`bg-white/10 backdrop-blur-md border border-white/20 text-white px-10 py-4 rounded-2xl font-bold flex items-center gap-3 transition-all ${isUploading ? 'opacity-70 cursor-wait' : 'hover:bg-white/20 active:scale-95 cursor-pointer'}`}>
+              <label className={`bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 md:px-10 py-3 md:py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all w-full sm:w-auto ${isUploading ? 'opacity-70 cursor-wait' : 'hover:bg-white/20 active:scale-95 cursor-pointer'}`}>
                 <span className="material-symbols-outlined">{isUploading ? 'refresh' : 'upload_file'}</span>
                 {isUploading ? "Scanning..." : "Upload Image"}
                 <input type="file" accept="image/*" className="hidden" onChange={handleImageSelection} disabled={isUploading} />
@@ -233,37 +234,37 @@ export function Dashboard() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
               {/* LEFT COLUMN */}
-              <div className="lg:col-span-9 space-y-12">
+              <div className="lg:col-span-8 xl:col-span-9 space-y-10 md:space-y-12">
                 {/* Recent Scans */}
                 <section>
-                  <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-3xl font-black">Recent Scans</h2>
+                  <div className="flex items-center justify-between mb-6 md:mb-8">
+                    <h2 className="text-2xl md:text-3xl font-black">Recent Scans</h2>
                     <Link to="#" className="text-sm font-bold text-primary hover:underline">View All</Link>
                   </div>
-                  <div className="flex gap-8 overflow-x-auto pb-6 scrollbar-hide">
+                  <div className="flex gap-4 md:gap-8 overflow-x-auto pb-6 scrollbar-hide -mx-2 px-2">
                     {recipes.length > 0 ? recipes.slice(0, 12).map((recipe) => (
-                      <Link to={`/recipe/${recipe.id}`} key={recipe.id} className="flex-shrink-0 w-64 group">
-                        <div className="relative aspect-[4/5] rounded-[48px] overflow-hidden mb-4 shadow-sm group-hover:shadow-2xl transition-all duration-500 border border-outline/10">
+                      <Link to={`/recipe/${recipe.id}`} key={recipe.id} className="flex-shrink-0 w-56 md:w-64 group">
+                        <div className="relative aspect-[4/5] rounded-[32px] md:rounded-[48px] overflow-hidden mb-4 shadow-sm group-hover:shadow-2xl transition-all duration-500 border border-outline/10">
                           <img src={recipe.image} alt={recipe.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
-                          <div className="absolute top-4 right-4 bg-primary px-3 py-1.5 rounded-xl text-[10px] font-black text-white shadow-xl">
+                          <div className="absolute top-3 right-3 md:top-4 md:right-4 bg-primary px-2 md:px-3 py-1 md:py-1.5 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-black text-white shadow-xl">
                             {recipe.confidence}% Match
                           </div>
-                          <div className="absolute bottom-6 left-6 right-6">
-                             <h5 className="font-bold text-lg text-white truncate mb-1">{recipe.title}</h5>
-                             <p className="text-xs font-bold text-white/70 uppercase tracking-widest">{recipe.cuisine}</p>
+                          <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 right-4 md:right-6">
+                             <h5 className="font-bold text-base md:text-lg text-white truncate mb-1">{recipe.title}</h5>
+                             <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest">{recipe.cuisine}</p>
                           </div>
                         </div>
                       </Link>
                     )) : (
                       recentScans.map((scan) => (
-                        <div key={scan.id} className="flex-shrink-0 w-56 opacity-60">
-                          <div className="aspect-[4/5] rounded-[48px] bg-stone-100 overflow-hidden mb-3">
+                        <div key={scan.id} className="flex-shrink-0 w-48 md:w-56 opacity-60">
+                          <div className="aspect-[4/5] rounded-[32px] md:rounded-[48px] bg-stone-100 overflow-hidden mb-3">
                              <img src={scan.image} className="w-full h-full object-cover grayscale" />
                           </div>
-                          <p className="text-sm font-bold text-center">{scan.title}</p>
+                          <p className="text-xs md:text-sm font-bold text-center">{scan.title}</p>
                         </div>
                       ))
                     )}
@@ -272,34 +273,34 @@ export function Dashboard() {
 
                 {/* AI Recommendations */}
                 <section>
-                  <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-3xl font-black flex items-center gap-4">
-                      <span className="material-symbols-outlined text-primary text-4xl">auto_awesome</span>
+                  <div className="flex items-center justify-between mb-6 md:mb-8">
+                    <h2 className="text-2xl md:text-3xl font-black flex items-center gap-3 md:gap-4">
+                      <span className="material-symbols-outlined text-primary text-3xl md:text-4xl">auto_awesome</span>
                       Personalized for You
                     </h2>
-                    <button onClick={() => fetchRecommendations(userProfile?.dietaryPreferences)} className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary/10 transition-all">
-                      <span className={`material-symbols-outlined ${recsLoading ? 'animate-spin' : ''}`}>refresh</span>
+                    <button onClick={() => fetchRecommendations(userProfile?.dietaryPreferences)} className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary/10 transition-all">
+                      <span className={`material-symbols-outlined text-sm md:text-base ${recsLoading ? 'animate-spin' : ''}`}>refresh</span>
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
                     {recommendations.length > 0 ? recommendations.map((recipe, idx) => (
-                      <div key={idx} className="bg-white rounded-[40px] p-0 shadow-sm border border-stone-300 hover:shadow-xl hover:-translate-y-2 transition-all relative overflow-hidden group">
+                      <div key={idx} className="bg-white rounded-[32px] md:rounded-[40px] p-0 shadow-sm border border-stone-300 hover:shadow-xl hover:-translate-y-2 transition-all relative overflow-hidden group">
                         <div className="relative aspect-video overflow-hidden">
                            <img src={recipe.image} alt={recipe.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                            <div className="absolute inset-0 bg-gradient-to-t from-stone-900/40 to-transparent"></div>
                            <div className="absolute bottom-4 left-6">
-                              <span className="px-3 py-1 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg text-[10px] font-black text-white uppercase tracking-widest">Recommended</span>
+                              <span className="px-3 py-1 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg text-[9px] font-black text-white uppercase tracking-widest">Recommended</span>
                            </div>
                         </div>
-                        <div className="p-8">
-                          <h4 className="font-bold text-xl mb-3 pr-10 leading-tight group-hover:text-primary transition-colors">{recipe.title}</h4>
-                          <p className="text-sm text-stone-400 mb-8 line-clamp-2 font-medium">{recipe.description}</p>
+                        <div className="p-6 md:p-8">
+                          <h4 className="font-bold text-lg md:text-xl mb-2 md:mb-3 pr-8 leading-tight group-hover:text-primary transition-colors">{recipe.title}</h4>
+                          <p className="text-xs md:text-sm text-stone-400 mb-6 md:mb-8 line-clamp-2 font-medium">{recipe.description}</p>
                           <div className="flex gap-3">
                             <button 
                               onClick={async () => {
                                 // If it's a recommendation, we might need to generate it first
                                 if (recipe.id.startsWith('rec-')) {
-                                  setLoading(true);
+                                  setIsUploading(true);
                                   try {
                                     const res = await fetch("http://localhost:5000/api/search-generate", {
                                       method: "POST",
@@ -310,24 +311,24 @@ export function Dashboard() {
                                     if (res.ok) navigate(`/recipe/${data.id}`);
                                     else alert("Could not generate recipe");
                                   } catch (e) { alert("Server error"); }
-                                  finally { setLoading(false); }
+                                  finally { setIsUploading(false); }
                                 } else {
                                   navigate(`/recipe/${recipe.id}`);
                                 }
                               }} 
-                              className="flex-[3] py-4 bg-stone-100 hover:bg-primary hover:text-white font-black text-sm rounded-2xl transition-all"
+                              className="flex-[3] py-3 md:py-4 bg-stone-100 hover:bg-primary hover:text-white font-black text-[10px] md:text-sm rounded-2xl transition-all"
                             >
                               View Recipe
                             </button>
-                            <button onClick={() => toggleSaveRecipe(recipe.id)} className={`flex-1 h-14 flex items-center justify-center rounded-2xl transition-all ${userProfile?.savedRecipes?.includes(recipe.id) ? 'bg-red-50 text-red-500' : 'bg-stone-100 hover:text-red-500'}`}>
-                              <span className="material-symbols-outlined" style={{ fontVariationSettings: userProfile?.savedRecipes?.includes(recipe.id) ? "'FILL' 1" : "" }}>favorite</span>
+                            <button onClick={() => toggleSaveRecipe(recipe.id)} className={`flex-1 h-12 md:h-14 flex items-center justify-center rounded-2xl transition-all ${userProfile?.savedRecipes?.includes(recipe.id) ? 'bg-red-50 text-red-500' : 'bg-stone-100 hover:text-red-500'}`}>
+                              <span className="material-symbols-outlined text-sm md:text-base" style={{ fontVariationSettings: userProfile?.savedRecipes?.includes(recipe.id) ? "'FILL' 1" : "" }}>favorite</span>
                             </button>
                           </div>
                         </div>
                       </div>
                     )) : (
-                      <div className="col-span-full py-20 bg-stone-50 rounded-[40px] border-2 border-dashed border-stone-200 text-center">
-                         <p className="text-stone-400 font-bold">Recommendations are loading...</p>
+                      <div className="col-span-full py-16 md:py-20 bg-stone-50 rounded-[32px] md:rounded-[40px] border-2 border-dashed border-stone-200 text-center">
+                         <p className="text-stone-400 font-bold text-sm">Recommendations are loading...</p>
                       </div>
                     )}
                   </div>
@@ -335,26 +336,26 @@ export function Dashboard() {
               </div>
 
               {/* RIGHT COLUMN */}
-              <div className="lg:col-span-3 space-y-10">
+              <div className="lg:col-span-4 xl:col-span-3 space-y-8 md:space-y-10">
                 {/* Health Center */}
                 <div className="space-y-6">
-                  <h3 className="text-sm font-black uppercase tracking-[0.2em] text-stone-400 px-2">Health Center</h3>
-                  <div className="bg-gradient-to-br from-primary via-blue-600 to-indigo-700 p-8 rounded-[48px] text-white shadow-xl">
-                    <p className="text-[10px] font-black uppercase tracking-widest opacity-70 mb-2">Calories</p>
-                    <h3 className="text-4xl font-black mb-1">{nutrition?.calories?.current?.toLocaleString() || 0}</h3>
-                    <p className="text-xs font-bold opacity-70 mb-6">kcal today</p>
-                    <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden">
+                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 px-2">Health Center</h3>
+                  <div className="bg-gradient-to-br from-primary via-blue-600 to-indigo-700 p-6 md:p-8 rounded-[32px] md:rounded-[48px] text-white shadow-xl">
+                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-70 mb-1 md:mb-2">Calories</p>
+                    <h3 className="text-3xl md:text-4xl font-black mb-1">{nutrition?.calories?.current?.toLocaleString() || 0}</h3>
+                    <p className="text-[10px] md:text-xs font-bold opacity-70 mb-4 md:mb-6">kcal today</p>
+                    <div className="w-full bg-white/20 h-1.5 md:h-2 rounded-full overflow-hidden">
                       <div className="bg-white h-full rounded-full" style={{ width: `${Math.min(100, (nutrition?.calories?.current / (nutrition?.calories?.max || 2000)) * 100)}%` }}></div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 md:gap-4">
                     {['Protein', 'Carbs', 'Fats'].map(label => (
-                      <div key={label} className="bg-white p-5 rounded-[32px] border border-stone-100 shadow-sm">
-                        <div className="flex justify-between items-center mb-3">
-                          <p className="text-[10px] font-black text-stone-400 uppercase">{label}</p>
-                          <h4 className="text-lg font-black">{nutrition?.macros?.[label.toLowerCase()]?.current || 0}g</h4>
+                      <div key={label} className="bg-white p-4 md:p-5 rounded-[24px] md:rounded-[32px] border border-stone-100 shadow-sm">
+                        <div className="flex justify-between items-center mb-2 md:mb-3">
+                          <p className="text-[9px] md:text-[10px] font-black text-stone-400 uppercase">{label}</p>
+                          <h4 className="text-base md:text-lg font-black">{nutrition?.macros?.[label.toLowerCase()]?.current || 0}g</h4>
                         </div>
-                        <div className="h-1.5 bg-stone-50 rounded-full overflow-hidden">
+                        <div className="h-1 bg-stone-50 rounded-full overflow-hidden">
                           <div className={`h-full ${label === 'Protein' ? 'bg-blue-500' : label === 'Carbs' ? 'bg-green-500' : 'bg-yellow-500'}`} style={{ width: '40%' }}></div>
                         </div>
                       </div>
@@ -363,54 +364,54 @@ export function Dashboard() {
                 </div>
 
                 {/* Saved Recipes Widget */}
-                <div className="bg-white p-7 rounded-[40px] shadow-sm border border-stone-100 transition-all">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="font-bold text-lg flex items-center gap-2 text-on-surface">
-                      <span className="material-symbols-outlined text-red-500" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+                <div className="bg-white p-6 md:p-7 rounded-[32px] md:rounded-[40px] shadow-sm border border-stone-100 transition-all">
+                  <div className="flex justify-between items-center mb-4 md:mb-6">
+                    <h3 className="font-bold text-base md:text-lg flex items-center gap-2 text-on-surface">
+                      <span className="material-symbols-outlined text-red-500 text-sm md:text-base" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
                       Saved Recipes
                     </h3>
-                    <span className="text-xs font-black bg-stone-50 px-2 py-1 rounded-lg text-stone-400">{savedList.length}</span>
+                    <span className="text-[10px] md:text-xs font-black bg-stone-50 px-2 py-0.5 md:py-1 rounded-lg text-stone-400">{savedList.length}</span>
                   </div>
                   {savedList.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3 md:space-y-4">
                       {savedList.slice(0, 3).map(recipe => (
-                        <Link to={`/recipe/${recipe.id}`} key={recipe.id} className="flex items-center gap-4 group">
-                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0">
+                        <Link to={`/recipe/${recipe.id}`} key={recipe.id} className="flex items-center gap-3 md:gap-4 group">
+                          <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl overflow-hidden bg-stone-100 flex-shrink-0">
                             <img src={recipe.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                           </div>
                           <div className="min-w-0">
-                            <h4 className="text-sm font-bold truncate text-on-surface group-hover:text-primary transition-colors">{recipe.title}</h4>
-                            <p className="text-[10px] font-bold text-stone-400 uppercase tracking-tight">{recipe.cuisine}</p>
+                            <h4 className="text-xs md:text-sm font-bold truncate text-on-surface group-hover:text-primary transition-colors">{recipe.title}</h4>
+                            <p className="text-[8px] md:text-[10px] font-bold text-stone-400 uppercase tracking-tight">{recipe.cuisine}</p>
                           </div>
                         </Link>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-xs text-stone-400 font-bold text-center py-6">No saved recipes yet.</p>
+                    <p className="text-[10px] md:text-xs text-stone-400 font-bold text-center py-4 md:py-6">No saved recipes yet.</p>
                   )}
                 </div>
 
-                <div className="bg-stone-900 p-8 rounded-[40px] text-white shadow-2xl relative overflow-hidden">
+                <div className="bg-stone-900 p-6 md:p-8 rounded-[32px] md:rounded-[40px] text-white shadow-2xl relative overflow-hidden">
                   <div className="relative z-10">
-                    <h3 className="font-bold text-lg mb-6 flex items-center gap-3">
-                      <span className="material-symbols-outlined text-primary">shopping_basket</span>
+                    <h3 className="font-bold text-base md:text-lg mb-4 md:mb-6 flex items-center gap-2 md:gap-3">
+                      <span className="material-symbols-outlined text-primary text-sm md:text-base">shopping_basket</span>
                       Groceries
                     </h3>
                     {shoppingList.length > 0 ? (
-                      <ul className="space-y-4 mb-8">
+                      <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8">
                         {shoppingList.slice(0, 4).map(item => (
                           <li key={item._id} className="flex justify-between items-center group">
-                            <span className="text-sm text-stone-400 group-hover:text-white transition-colors">{item.name}</span>
-                            <button onClick={() => removeShoppingListItem(item._id)} className="text-stone-600 hover:text-red-400">
-                              <span className="material-symbols-outlined text-sm">close</span>
+                            <span className="text-xs md:text-sm text-stone-400 group-hover:text-white transition-colors truncate pr-4">{item.name}</span>
+                            <button onClick={() => removeShoppingListItem(item._id)} className="text-stone-600 hover:text-red-400 flex-shrink-0">
+                              <span className="material-symbols-outlined text-sm md:text-base">close</span>
                             </button>
                           </li>
                         ))}
                       </ul>
                     ) : (
-                      <p className="text-xs text-stone-400 mb-8 italic">Your list is empty.</p>
+                      <p className="text-[10px] md:text-xs text-stone-400 mb-6 md:mb-8 italic">Your list is empty.</p>
                     )}
-                    <button onClick={() => navigate('/shopping-list')} className="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-bold text-xs transition-all border border-white/10">
+                    <button onClick={() => navigate('/shopping-list')} className="w-full py-2.5 md:py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl md:rounded-2xl font-bold text-[10px] md:text-xs transition-all border border-white/10">
                       View Full List
                     </button>
                   </div>
@@ -419,34 +420,34 @@ export function Dashboard() {
             </div>
 
             {/* Clean Weekly Planner */}
-            <section className="pt-20 border-t border-stone-100">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <section className="pt-16 md:pt-20 border-t border-stone-100 overflow-hidden">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
                 <div>
-                  <h2 className="text-4xl font-black mb-2 text-on-surface">Weekly Planner</h2>
-                  <p className="text-sm text-stone-400 font-medium">Plan your meals and track your culinary schedule.</p>
+                  <h2 className="text-3xl md:text-4xl font-black mb-1 md:2 text-on-surface">Weekly Planner</h2>
+                  <p className="text-xs md:text-sm text-stone-400 font-medium">Plan your meals and track your culinary schedule.</p>
                 </div>
-                <div className="flex gap-3 p-1.5 bg-white rounded-[28px] border border-stone-300 shadow-sm">
-                  <input type="text" placeholder="Recipe name..." className="bg-transparent border-none outline-none px-6 text-sm font-bold w-56 text-on-surface placeholder:text-stone-300" value={mealRecipe} onChange={(e) => setMealRecipe(e.target.value)} />
-                  <button onClick={addMealPlan} className="bg-primary text-white w-12 h-12 rounded-[22px] flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20">
+                <div className="flex gap-2 md:gap-3 p-1 md:p-1.5 bg-white rounded-2xl md:rounded-[28px] border border-stone-300 shadow-sm w-full md:w-auto">
+                  <input type="text" placeholder="Recipe name..." className="bg-transparent border-none outline-none px-4 md:px-6 text-xs md:text-sm font-bold flex-grow md:w-56 text-on-surface placeholder:text-stone-300" value={mealRecipe} onChange={(e) => setMealRecipe(e.target.value)} />
+                  <button onClick={addMealPlan} className="bg-primary text-white w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-[22px] flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20 flex-shrink-0">
                     <span className="material-symbols-outlined">add</span>
                   </button>
                 </div>
               </div>
               
-              <div className="bg-white rounded-[48px] shadow-md border border-stone-300 overflow-x-auto scrollbar-hide">
-                <div className="grid grid-cols-8 divide-x-2 divide-stone-200 min-w-[1200px]">
-                  <div className="bg-stone-50/50 p-6 flex flex-col justify-around text-center border-r-2 border-stone-200">
+              <div className="bg-white rounded-[32px] md:rounded-[48px] shadow-md border border-stone-300 overflow-x-auto scrollbar-hide">
+                <div className="grid grid-cols-8 divide-x divide-stone-200 min-w-[800px] md:min-w-[1200px]">
+                  <div className="bg-stone-50/50 p-4 md:p-6 flex flex-col justify-around text-center border-r divide-y divide-stone-200/50">
                     <div className="h-10"></div>
                     {meals.map(m => (
-                      <div key={m} className="h-32 flex items-center justify-center">
-                         <span className="text-[11px] font-black uppercase tracking-[0.2em] text-stone-400 -rotate-90">{m}</span>
+                      <div key={m} className="h-24 md:h-32 flex items-center justify-center">
+                         <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] text-stone-400 -rotate-90">{m}</span>
                       </div>
                     ))}
                   </div>
                   {days.map(day => (
                     <div key={day} className="col-span-1">
-                      <div className="p-5 text-center border-b-2 border-stone-300 bg-stone-50/20">
-                         <span className="text-sm font-black uppercase tracking-widest text-primary">{day.slice(0, 3)}</span>
+                      <div className="p-3 md:p-5 text-center border-b border-stone-300 bg-stone-50/20">
+                         <span className="text-xs md:text-sm font-black uppercase tracking-widest text-primary">{day.slice(0, 3)}</span>
                       </div>
                       {meals.map(meal => {
                         const plan = getMealForSlot(day, meal);
@@ -458,18 +459,18 @@ export function Dashboard() {
                         const colorClass = mealColors[meal] || 'bg-stone-50 border-stone-100 text-stone-600';
                         
                         return (
-                          <div key={meal} className="h-32 p-3 group border-b border-stone-50 last:border-b-0">
+                          <div key={meal} className="h-24 md:h-32 p-2 md:p-3 group border-b border-stone-50 last:border-b-0">
                             {plan ? (
-                              <div className={`${colorClass} border rounded-[24px] p-4 h-full flex flex-col justify-between transition-all hover:scale-[1.02] hover:shadow-md`}>
-                                <h6 className="text-[11px] font-black leading-tight line-clamp-2 uppercase tracking-tight">{plan.recipeTitle}</h6>
+                              <div className={`${colorClass} border rounded-xl md:rounded-[24px] p-2 md:p-4 h-full flex flex-col justify-between transition-all hover:scale-[1.02] hover:shadow-md`}>
+                                <h6 className="text-[9px] md:text-[11px] font-black leading-tight line-clamp-2 uppercase tracking-tight">{plan.recipeTitle}</h6>
                                 <div className="flex justify-between items-center">
-                                   <span className="text-[9px] font-black uppercase opacity-60">{meal}</span>
-                                   <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                                   <span className="text-[8px] font-black uppercase opacity-60">{meal}</span>
+                                   <span className="material-symbols-outlined text-[14px] md:text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                                 </div>
                               </div>
                             ) : (
-                              <div className="border-2 border-dashed border-stone-100 rounded-[24px] h-full flex items-center justify-center opacity-40 group-hover:opacity-100 transition-all cursor-pointer hover:bg-stone-50" onClick={() => { setMealDay(day); setMealType(meal); }}>
-                                <span className="material-symbols-outlined text-stone-300">add_circle</span>
+                              <div className="border border-dashed border-stone-200 rounded-xl md:rounded-[24px] h-full flex items-center justify-center opacity-40 group-hover:opacity-100 transition-all cursor-pointer hover:bg-stone-50" onClick={() => { setMealDay(day); setMealType(meal); }}>
+                                <span className="material-symbols-outlined text-stone-300 text-sm md:text-base">add_circle</span>
                               </div>
                             )}
                           </div>
@@ -504,6 +505,19 @@ export function Dashboard() {
             <div className="flex gap-4">
               <button onClick={() => setIsDietModalOpen(false)} className="flex-1 font-bold text-stone-400">Cancel</button>
               <button onClick={confirmScan} className="flex-[2] py-5 bg-primary text-white rounded-3xl font-black">Generate</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* NEW: Full Page Processing Overlay */}
+      {isUploading && (
+        <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-stone-900/40 backdrop-blur-xl transition-all duration-500">
+          <div className="bg-white/90 p-16 rounded-[60px] shadow-2xl border border-white/50 flex flex-col items-center scale-110">
+            <FoodSpinner />
+            <div className="text-center">
+              <h3 className="text-2xl font-black mb-2 text-stone-800">AI Analysis in Progress</h3>
+              <p className="text-stone-500 font-bold animate-pulse">Identifying ingredients and crafting your recipe...</p>
             </div>
           </div>
         </div>
