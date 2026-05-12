@@ -17,25 +17,25 @@ export function Hero() {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="relative w-full max-w-[1600px] flex flex-col items-center px-4"
+          className="relative w-full max-w-[1920px] flex flex-col items-center px-4"
         >
           {/* Main Burger Image - Flush with bottom */}
-          <div className="relative w-full translate-y-[15%] md:translate-y-[10%] max-w-[90vw] md:max-w-none">
+          <div className="relative w-full translate-y-[15%] md:translate-y-[10%] max-w-[95vw] lg:max-w-[85vw] xl:max-w-none">
             <img
               src="/burger.png"
               alt="Perfect Burger"
-              className="w-full h-auto max-h-[65vh] md:max-h-none object-contain drop-shadow-[0_45px_45px_rgba(0,0,0,0.3)] mx-auto"
+              className="w-full h-auto max-h-[65vh] lg:max-h-[75vh] 2xl:max-h-none object-contain drop-shadow-[0_45px_45px_rgba(0,0,0,0.3)] mx-auto scale-110 md:scale-100 lg:scale-110 xl:scale-125 transition-transform duration-1000"
             />
 
             {/* Content Over the Burger - Precise Typography Match */}
-            <div className="absolute bottom-[28%] sm:bottom-[25%] md:bottom-[22%] left-1/2 -translate-x-1/2 w-[280px] sm:w-[340px] md:w-[450px] text-center space-y-4 md:space-y-6 z-50">
-              <p className="text-white text-[10px] md:text-[13px] font-normal leading-relaxed opacity-90 [text-shadow:_0_1px_3px_rgba(0,0,0,0.3)]">
+            <div className="absolute bottom-[28%] sm:bottom-[25%] md:bottom-[22%] lg:bottom-[25%] xl:bottom-[28%] left-1/2 -translate-x-1/2 w-[280px] sm:w-[340px] md:w-[450px] lg:w-[500px] text-center space-y-4 md:space-y-6 z-50">
+              <p className="text-white text-[10px] md:text-[13px] lg:text-[15px] font-normal leading-relaxed opacity-90 [text-shadow:_0_1px_3px_rgba(0,0,0,0.3)]">
                 Deep inside our wonderful world of vertical farms, freshness runs free, bland gets banished, and smart produce secures the future of food.
               </p>
               
               <Link 
                 to="/dashboard"
-                className="inline-block bg-white text-black px-6 md:px-8 py-2 md:py-2.5 rounded-sm font-bold text-[8px] md:text-[10px] uppercase tracking-[0.1em] hover:bg-stone-100 transition-all shadow-xl active:scale-95"
+                className="inline-block bg-white text-black px-6 md:px-8 py-2 md:py-2.5 rounded-sm font-bold text-[8px] md:text-[10px] lg:text-[12px] uppercase tracking-[0.1em] hover:bg-stone-100 transition-all shadow-xl active:scale-95"
               >
                 Discover Now
               </Link>

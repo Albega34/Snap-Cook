@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Header } from "../components/layout/Header";
 import { motion, AnimatePresence } from "framer-motion";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function ShoppingList() {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState("");
@@ -13,7 +15,7 @@ export function ShoppingList() {
 
   const fetchItems = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/shopping-list");
+      const res = await fetch(`${API_URL}/shopping-list`);
       const data = await res.json();
       setItems(data.items || []);
     } catch (err) {
@@ -28,7 +30,7 @@ export function ShoppingList() {
     if (!newItem.trim()) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/shopping-list", {
+      const res = await fetch(`${API_URL}/shopping-list`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: [newItem.trim()] })
@@ -43,7 +45,7 @@ export function ShoppingList() {
 
   const removeItem = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/shopping-list/${id}`, {
+      const res = await fetch(`${API_URL}/shopping-list/${id}`, {
         method: "DELETE"
       });
       const data = await res.json();

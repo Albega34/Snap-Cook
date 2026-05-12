@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ export function Header() {
     if (e.key === "Enter" && searchQuery.trim()) {
       setIsSearching(true);
       try {
-        const res = await fetch("http://localhost:5000/api/search-generate", {
+        const res = await fetch(`${API_URL}/search-generate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ query: searchQuery.trim() })

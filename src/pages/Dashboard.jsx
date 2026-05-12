@@ -4,6 +4,8 @@ import { userData, recentScans } from "../data/mockData";
 import { Header } from "../components/layout/Header";
 import { FoodSpinner } from "../components/ui/FoodSpinner";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function Dashboard() {
   const [recipes, setRecipes] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -31,9 +33,19 @@ export function Dashboard() {
     glutenFree: false
   });
 
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+
+  const exampleLinks = [
+    "https://i.ibb.co/mFhPzGSs/f53800c8ca6a.jpg",
+    "https://i.ibb.co/2QzkQ6C/2e7c66217d70.jpg",
+    "https://i.ibb.co/4RhM944V/590b9661e6f9.jpg",
+    "https://i.ibb.co/B2MHmdsr/63802665f5dd.jpg"
+  ];
+
   useEffect(() => {
     // Fetch Recipes
-    fetch("http://localhost:5000/api/recipes")
+    fetch(`${API_URL}/recipes`)
       .then(res => res.json())
       .then(data => {
         setRecipes(data);
@@ -58,7 +70,7 @@ export function Dashboard() {
       .catch(err => { console.error("Failed to fetch recipes:", err); setLoading(false); });
 
     // Fetch User Profile
-    fetch("http://localhost:5000/api/user/profile")
+    fetch(`${API_URL}/user/profile`)
       .then(res => res.json())
       .then(data => {
         setUserProfile(data);
@@ -66,13 +78,13 @@ export function Dashboard() {
       });
 
     // Fetch Shopping List
-    fetch("http://localhost:5000/api/shopping-list")
+    fetch(`${API_URL}/shopping-list`)
       .then(res => res.json())
       .then(data => setShoppingList(data.items || []))
       .catch(err => console.error("Shopping list err:", err));
 
     // Fetch Meal Plans
-    fetch("http://localhost:5000/api/meal-plans")
+    fetch(`${API_URL}/meal-plans`)
       .then(res => res.json())
       .then(data => setMealPlans(data || []))
       .catch(err => console.error("Meal plans err:", err));
@@ -80,7 +92,7 @@ export function Dashboard() {
 
   const fetchRecommendations = (prefs) => {
     setRecsLoading(true);
-    fetch("http://localhost:5000/api/recommendations/", {
+    fetch(`${API_URL}/recommendations/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ dietaryPreferences: prefs })
@@ -102,7 +114,7 @@ export function Dashboard() {
     const isSaved = userProfile.savedRecipes?.includes(recipeId);
     const endpoint = isSaved ? "unsave-recipe" : "save-recipe";
 
-    fetch(`http://localhost:5000/api/user/${endpoint}`, {
+    fetch(`${API_URL}/user/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ recipeId })
@@ -115,7 +127,7 @@ export function Dashboard() {
   };
 
   const removeShoppingListItem = (itemId) => {
-    fetch(`http://localhost:5000/api/shopping-list/${itemId}`, {
+    fetch(`${API_URL}/shopping-list/${itemId}`, {
       method: "DELETE"
     })
       .then(res => res.json())
@@ -137,7 +149,7 @@ export function Dashboard() {
 
   const addMealPlan = () => {
     if (!mealRecipe) return;
-    fetch("http://localhost:5000/api/meal-plans", {
+    fetch(`${API_URL}/meal-plans`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ day: mealDay, meal: mealType, recipeTitle: mealRecipe })
@@ -172,23 +184,14 @@ export function Dashboard() {
     formData.append("dietaryPreferences", JSON.stringify(tempDietPrefs));
 
     try {
-      const res = await fetch("http://localhost:5000/api/scan", {
+      const res = await fetch(`${API_URL}/scan`, {
         method: "POST",
         body: formData,
       });
       const data = await res.json();
 
       if (res.ok) {
-        const newId = data.id;
-        const imageUrl = data.image;
-
-        recentScans.unshift({
-          id: newId,
-          title: "AI Scanned Dish",
-          image: imageUrl
-        });
-
-        navigate(`/recipe/${newId}`);
+        navigate(`/recipe/${data.id}`);
       } else {
         alert(data.message || "Upload failed.");
       }
@@ -197,6 +200,31 @@ export function Dashboard() {
     } finally {
       setIsUploading(false);
       setSelectedFile(null);
+    }
+  };
+
+  const handleLinkScan = async () => {
+    if (!linkUrl) return;
+    setIsLinkModalOpen(false);
+    setIsUploading(true);
+
+    try {
+      const res = await fetch(`${API_URL}/scan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          imageUrl: linkUrl,
+          dietaryPreferences: JSON.stringify(tempDietPrefs) 
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) navigate(`/recipe/${data.id}`);
+      else alert(data.message || "Link processing failed.");
+    } catch (error) {
+      console.error("Link scan failed:", error);
+    } finally {
+      setIsUploading(false);
+      setLinkUrl("");
     }
   };
 
@@ -215,9 +243,12 @@ export function Dashboard() {
             <h1 className="font-brand text-4xl md:text-6xl text-white mb-4 uppercase tracking-tighter leading-none">What's Cooking Today?</h1>
             <p className="font-body-lg text-blue-100 mb-8 md:mb-10 leading-relaxed max-w-lg text-sm md:text-base">Snap a photo of your ingredients and let AI reveal the magic within.</p>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
-              <button className="bg-white text-primary px-8 md:px-10 py-3 md:py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-50 transition-all active:scale-95 shadow-xl w-full sm:w-auto">
-                <span className="material-symbols-outlined">add_a_photo</span>
-                Open Camera
+              <button 
+                onClick={() => setIsLinkModalOpen(true)}
+                className="bg-white text-primary px-8 md:px-10 py-3 md:py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-50 transition-all active:scale-95 shadow-xl w-full sm:w-auto"
+              >
+                <span className="material-symbols-outlined">link</span>
+                Enter Link
               </button>
               <label className={`bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 md:px-10 py-3 md:py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all w-full sm:w-auto ${isUploading ? 'opacity-70 cursor-wait' : 'hover:bg-white/20 active:scale-95 cursor-pointer'}`}>
                 <span className="material-symbols-outlined">{isUploading ? 'refresh' : 'upload_file'}</span>
@@ -302,7 +333,7 @@ export function Dashboard() {
                                 if (recipe.id.startsWith('rec-')) {
                                   setIsUploading(true);
                                   try {
-                                    const res = await fetch("http://localhost:5000/api/search-generate", {
+                                    const res = await fetch(`${API_URL}/search-generate`, {
                                       method: "POST",
                                       headers: { "Content-Type": "application/json" },
                                       body: JSON.stringify({ query: recipe.title })
@@ -518,6 +549,51 @@ export function Dashboard() {
             <div className="text-center">
               <h3 className="text-2xl font-black mb-2 text-stone-800">AI Analysis in Progress</h3>
               <p className="text-stone-500 font-bold animate-pulse">Identifying ingredients and crafting your recipe...</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Link Input Modal */}
+      {isLinkModalOpen && (
+        <div className="fixed inset-0 bg-stone-900/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+          <div className="bg-white w-full max-w-2xl rounded-[48px] p-10 shadow-2xl border border-stone-100">
+            <h3 className="text-3xl font-black mb-2">Analyze from Link</h3>
+            <p className="text-stone-400 text-sm mb-8">Paste a direct image URL or pick an example below.</p>
+            
+            <div className="space-y-6 mb-10">
+              <div className="relative">
+                <input 
+                  type="text" 
+                  value={linkUrl} 
+                  onChange={(e) => setLinkUrl(e.target.value)}
+                  placeholder="https://example.com/food-image.jpg"
+                  className="w-full bg-stone-50 border-2 border-stone-100 rounded-2xl px-6 py-4 text-sm font-bold text-on-surface focus:border-primary outline-none transition-all pr-12"
+                />
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-stone-300">link</span>
+              </div>
+
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-stone-400 mb-4 px-2">Example Links</p>
+                <div className="grid grid-cols-1 gap-2">
+                   {exampleLinks.map((ex, i) => (
+                     <button 
+                       key={i} 
+                       onClick={() => setLinkUrl(ex)}
+                       className={`text-left p-4 rounded-xl text-[11px] font-bold truncate transition-all ${linkUrl === ex ? 'bg-primary/10 text-primary border-primary/20' : 'bg-stone-50 text-stone-500 border border-transparent hover:bg-stone-100'}`}
+                     >
+                       {ex}
+                     </button>
+                   ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <button onClick={() => { setIsLinkModalOpen(false); setLinkUrl(""); }} className="flex-1 py-4 font-bold text-stone-400 hover:text-stone-600">Cancel</button>
+              <button onClick={handleLinkScan} className={`flex-[2] py-4 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all ${!linkUrl ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={!linkUrl}>
+                Process URL
+              </button>
             </div>
           </div>
         </div>

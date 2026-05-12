@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Header } from "../components/layout/Header";
 import { FoodSpinner } from "../components/ui/FoodSpinner";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function RecipeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ export function RecipeDetail() {
     setLoading(true);
     
     // Fetch Recipe
-    fetch(`http://localhost:5000/api/recipes/${id}`)
+    fetch(`${API_URL}/recipes/${id}`)
       .then(res => {
         if (!res.ok) throw new Error("Recipe not found");
         return res.json();
@@ -33,7 +35,7 @@ export function RecipeDetail() {
       });
 
     // Fetch User Profile to check if saved
-    fetch("http://localhost:5000/api/user/profile")
+    fetch(`${API_URL}/user/profile`)
       .then(res => res.json())
       .then(data => {
         setUserProfile(data);
@@ -45,7 +47,7 @@ export function RecipeDetail() {
 
   const toggleSave = () => {
     const endpoint = isSaved ? "unsave-recipe" : "save-recipe";
-    fetch(`http://localhost:5000/api/user/${endpoint}`, {
+    fetch(`${API_URL}/user/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ recipeId: id })
@@ -89,7 +91,7 @@ export function RecipeDetail() {
   const addToShoppingList = () => {
     if (!recipe) return;
     const items = recipe.ingredients.map(ing => ing.name);
-    fetch("http://localhost:5000/api/shopping-list", {
+    fetch(`${API_URL}/shopping-list`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ items })
